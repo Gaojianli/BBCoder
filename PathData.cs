@@ -12,6 +12,7 @@ namespace Bdcoder
         private string inputFileName;
         private string ffmpegPath;
         private string outputFilePath;
+        public string[] inputFileNames;
         public event PropertyChangedEventHandler PropertyChanged;
         public string FFPath
         {
@@ -39,6 +40,12 @@ namespace Bdcoder
                 outputFilePath = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("OutputFile"));
             }
+        }
+        public string getOupFilePath(string inputPath)
+        {
+            var filename = inputPath.Substring(0, inputPath.LastIndexOf("."));
+            var extName = inputPath.Substring(inputPath.LastIndexOf(".") + 1, (inputPath.Length - inputPath.LastIndexOf(".") - 1));
+            return $"{filename}_bdcoder.{extName}";
         }
     }
 }

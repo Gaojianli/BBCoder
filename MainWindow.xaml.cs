@@ -26,8 +26,9 @@ namespace Bdcoder
         public PathData pathData;
         public MainWindow()
         {
-            pathData = new PathData() {
-                FFPath=$"{System.Environment.CurrentDirectory}\\ffmpeg.exe"//Default path
+            pathData = new PathData()
+            {
+                FFPath = $"{System.Environment.CurrentDirectory}\\ffmpeg.exe"//Default path
             };
             InitializeComponent();
             ffpathBox.DataContext = pathData;
@@ -52,7 +53,7 @@ namespace Bdcoder
         private void DefaultConfButton_Checked(object sender, RoutedEventArgs e)
         {
             ArgsBox.Text = $"{commonArgs} -g 120 -b:v 5000k -an -y NUL";
-            if(CutGroup?.Visibility==Visibility.Visible)
+            if (CutGroup?.Visibility == Visibility.Visible)
                 CutGroup.Visibility = Visibility.Hidden;
         }
         private void LongConfButton_Checked(object sender, RoutedEventArgs e)
@@ -73,15 +74,23 @@ namespace Bdcoder
             {
                 Filter = "Supported Video File (*.*)|*.*",
                 FilterIndex = 2,
-                RestoreDirectory = true
+                RestoreDirectory = true,
+                Multiselect = true
             })
             {
                 if (filePicker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    pathData.InputFile = filePicker.FileName;
-                    var filename = pathData.InputFile.Substring(0, pathData.InputFile.LastIndexOf("."));
-                    var extName = pathData.InputFile.Substring(pathData.InputFile.LastIndexOf(".") + 1, (pathData.InputFile.Length - pathData.InputFile.LastIndexOf(".") - 1));
-                    pathData.OutputFile = $"{filename}_bdcoder.{extName}";
+                    pathData.inputFileNames = filePicker.FileNames;
+                    if (filePicker.FileNames.Length > 1)
+                    {
+                        pathData.InputFile = $"{System.IO.Path.GetDirectoryName(filePicker.FileName)}\\[MultiFile]";
+                        pathData.OutputFile = pathData.InputFile + "_bdcoder";
+                    }
+                    else
+                    {
+                        pathData.InputFile = filePicker.FileName;
+                        pathData.OutputFile = pathData.getOupFilePath(pathData.InputFile);
+                    }
                 }
             }
         }
@@ -90,7 +99,7 @@ namespace Bdcoder
             using (var filePicker = new System.Windows.Forms.SaveFileDialog()
             {
                 InitialDirectory = pathData.OutputFile,
-                FileName= pathData.OutputFile,
+                FileName = pathData.OutputFile,
                 Filter = $"Supported Video File (*.{pathData.InputFile.Substring(pathData.InputFile.LastIndexOf(".") + 1, (pathData.InputFile.Length - pathData.InputFile.LastIndexOf(".") - 1))})|*.{pathData.InputFile.Substring(pathData.InputFile.LastIndexOf(".") + 1, (pathData.InputFile.Length - pathData.InputFile.LastIndexOf(".") - 1))}",
                 FilterIndex = 2,
                 RestoreDirectory = true
@@ -105,34 +114,45 @@ namespace Bdcoder
 
         private void PreviewButton_Click(object sender, RoutedEventArgs e)
         {
-            string command = $"\"{pathData.FFPath}\"";
-            if ((bool)CUTConfButton.IsChecked)
+            if (pathData.inputFileNames == null || pathData.inputFileNames.Length == 0)
             {
-                var startTime = startTimePicker.Value;
-                var endTimeCmd = !(bool)endCheckBox.IsChecked ? $"-to {endTimePicker.Value}" : null;
-                command += $" -ss {startTime} {endTimeCmd} -accurate_seek -i \"{pathData.InputFile}\" -c copy -avoid_negative_ts 1 \"{pathData.OutputFile}\"";
+                MessageBox.Show("Please select at least one input file!",
+                    "NO input file",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
             }
-            else
+            foreach (var inputFile in pathData.inputFileNames)
             {
-                command += $" -i \"{pathData.InputFile}\" ";
-                if ((bool)CRFConfButton.IsChecked)
-                    command += $"{ArgsBox.Text} \"{pathData.OutputFile}\"";
+                var outputFile = pathData.getOupFilePath(inputFile);
+                string command = $"\"{pathData.FFPath}\"";
+                if ((bool)CUTConfButton.IsChecked)
+                {
+                    var startTime = startTimePicker.Value;
+                    var endTimeCmd = !(bool)endCheckBox.IsChecked ? $"-to {endTimePicker.Value}" : null;
+                    command += $" -ss {startTime} {endTimeCmd} -accurate_seek -i \"{inputFile}\" -c copy -avoid_negative_ts 1 \"{outputFile}\"";
+                }
                 else
                 {
-                    command += $"{ArgsBox.Text} -pass 1";
-                    command += $" &{command} -pass 2 \"{pathData.OutputFile}\"";
+                    command += $" -i \"{inputFile}\" ";
+                    if ((bool)CRFConfButton.IsChecked)
+                        command += $"{ArgsBox.Text} \"{outputFile}\"";
+                    else
+                    {
+                        command += $"{ArgsBox.Text} -pass 1";
+                        command += $" &{command} -pass 2 \"{outputFile}\"";
+                    }
                 }
-
-            }
-            if(MessageBox.Show($"Will excute \"{command}\"?","Confirm to excute?",MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                using (Process process = new Process())
+                if (!(bool)PreviewCheckBox.IsChecked || MessageBox.Show($"Will excute \"{command}\"?", "Confirm to excute?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    process.StartInfo.FileName = "cmd.exe";
-                    process.StartInfo.UseShellExecute = true;
-                    process.StartInfo.CreateNoWindow = false;
-                    process.StartInfo.Arguments = $"/c \"{command} & pause\" ";
-                    process.Start();
+                    using (Process process = new Process())
+                    {
+                        process.StartInfo.FileName = "cmd.exe";
+                        process.StartInfo.UseShellExecute = true;
+                        process.StartInfo.CreateNoWindow = false;
+                        process.StartInfo.Arguments = $"/c \"{command} & pause\" ";
+                        process.Start();
+                    }
                 }
             }
         }
@@ -160,12 +180,40 @@ namespace Bdcoder
             e.Handled = true;
         }
 
-        private void TextBox_PreviewDrop(object sender, DragEventArgs e)
+        private void InputBox_PreviewDrop(object sender, DragEventArgs e)
         {
-            foreach (var f in (string[])e.Data.GetData(DataFormats.FileDrop))
+            foreach (var filePath in (string[])e.Data.GetData(DataFormats.FileDrop))
             {
-                ((TextBox)sender).Text = f;
+                ((TextBox)sender).Text = filePath;
+                pathData.InputFile = filePath;
+                pathData.OutputFile = pathData.getOupFilePath(filePath);
             }
+        }
+        private void OutputBox_PreviewDrop(object sender, DragEventArgs e)
+        {
+            foreach (var filePath in (string[])e.Data.GetData(DataFormats.FileDrop))
+            {
+                ((TextBox)sender).Text = filePath;
+                pathData.OutputFile = filePath;
+            }
+        }
+        private void FFPathBox_PreviewDrop(object sender, DragEventArgs e)
+        {
+            foreach (var filePath in (string[])e.Data.GetData(DataFormats.FileDrop))
+            {
+                ((TextBox)sender).Text = filePath;
+                pathData.FFPath = filePath;
+            }
+        }
+
+        private void PreviewCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            PreviewButton.Content = "Preview Command";
+        }
+
+        private void PreviewCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            PreviewButton.Content = "Start";
         }
     }
 }
