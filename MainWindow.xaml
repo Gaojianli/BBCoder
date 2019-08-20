@@ -1,0 +1,54 @@
+﻿<Window x:Class="Bdcoder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bdcoder"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="BDcoder" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="71*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Content="FFmpeg  Path:" HorizontalAlignment="Right" Height="27" Margin="0,57,633.106,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="ffpathBox" HorizontalAlignment="Left" Height="27" Margin="153,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=FFPath, Mode=TwoWay}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop">
+            <TextBox.DataContext>
+                <local:PathData/>
+            </TextBox.DataContext>
+        </TextBox>
+        <Button x:Name="selectFFButtion" Content="浏览" HorizontalAlignment="Left" Height="27" Margin="639,57,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.608,0.478" Click="SelectFFButton_Click"/>
+        <Label Content="Args:" HorizontalAlignment="Right" Height="31" Margin="0,90,633.106,0" VerticalAlignment="Top" RenderTransformOrigin="1.053,0.264"/>
+        <TextBox x:Name="ArgsBox" HorizontalAlignment="Left" Height="82" Margin="153,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="-g 120 -b:v 5000k -an -y NUL"/>
+        <RadioButton x:Name="DefaultConfButton" Content="Default" HorizontalAlignment="Left" Height="19" Margin="148,187,0,0" VerticalAlignment="Top" Width="83" IsChecked="True" RenderTransformOrigin="0.425,-0.072" Checked="DefaultConfButton_Checked"/>
+        <RadioButton x:Name="LongConfButton" Content="Long" HorizontalAlignment="Left" Height="19" Margin="260,187,0,0" VerticalAlignment="Top" Width="88" Checked="LongConfButton_Checked"/>
+        <RadioButton x:Name="CRFConfButton" Content="CRF" HorizontalAlignment="Left" Height="19" Margin="368,187,0,0" VerticalAlignment="Top" Width="43" RenderTransformOrigin="-0.422,1.029" Checked="CRFConfButton_Checked"/>
+        <RadioButton x:Name="CUTConfButton" Content="Cut" HorizontalAlignment="Left" Height="19" Margin="472,187,0,0" VerticalAlignment="Top" Width="53" RenderTransformOrigin="0.455,-0.268" Checked="CUTConfButton_Checked"/>
+        <Label Content="Configuation:" HorizontalAlignment="Right" Margin="0,182,633.106,0" VerticalAlignment="Top"/>
+        <Label Content="InputFile:" HorizontalAlignment="Right" Height="25" Margin="0,224,633.106,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="input_Box" HorizontalAlignment="Left" Height="27" Margin="148,224,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=InputFile,Mode=TwoWay}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop" >
+            <TextBox.DataContext>
+                <local:PathData/>
+            </TextBox.DataContext>
+        </TextBox>
+        <Button x:Name="selectInputButton" Content="浏览" HorizontalAlignment="Left" Height="27" Margin="639,222,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.608,0.478" Click="SelectInputButton_Click"/>
+        <Label Content="OutputFile:" HorizontalAlignment="Right" Height="25" Margin="0,256,633.106,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="output_Box" HorizontalAlignment="Left" Height="27" Margin="148,256,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=OutputFile, Mode=TwoWay}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop">
+            <TextBox.DataContext>
+                <local:PathData/>
+            </TextBox.DataContext>
+        </TextBox>
+        <Button x:Name="SelectOutputButton" Content="浏览" HorizontalAlignment="Left" Height="27" Margin="639,256,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.608,0.478" Click="SelectOutputButton_Click"/>
+        <Button x:Name="PreviewButton" Content="Preview Command" HorizontalAlignment="Left" Height="28" Margin="614,372,0,0" VerticalAlignment="Top" Width="117" Click="PreviewButton_Click"/>
+        <GroupBox x:Name="CutGroup" Header="Cut Settings" HorizontalAlignment="Left" Height="60" Margin="148,301,0,0" VerticalAlignment="Top" Width="461" Visibility="Hidden">
+            <WrapPanel HorizontalAlignment="Left" Height="38" Width="451" VerticalAlignment="Top" Margin="0,0,-2,0">
+                <Label Content="Start Time:" Margin="0,5,0,0"/>
+                <xctk:TimeSpanUpDown x:Name="startTimePicker"  ShowDays="False" DisplayDefaultValueOnEmptyText="True" Margin="0,5,0,0" Minimum="0" UpdateValueOnEnterKey="True"/>
+                <Label Content="End Time:" Margin="40 5 0 0"/>
+                <xctk:TimeSpanUpDown x:Name="endTimePicker"  ShowDays="False" DisplayDefaultValueOnEmptyText="True" Margin="0,5,0,0" Minimum="0" DefaultValue="0:0:1"/>
+                <CheckBox x:Name="endCheckBox" Margin="10,10,0,0" Content="To the End" Width="101" Checked="EndCheckBox_Checked" Unchecked="EndCheckBox_Unchecked" />
+            </WrapPanel>
+        </GroupBox>
+    </Grid>
+</Window>
