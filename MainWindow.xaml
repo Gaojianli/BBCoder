@@ -13,11 +13,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Content="FFmpeg  Path:" HorizontalAlignment="Right" Height="27" Margin="0,57,633.106,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="ffpathBox" HorizontalAlignment="Left" Height="27" Margin="153,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=FFPath, Mode=TwoWay}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="FFPathBox_PreviewDrop">
-            <TextBox.DataContext>
-                <local:PathData/>
-            </TextBox.DataContext>
-        </TextBox>
+        <TextBox x:Name="ffpathBox" DataContext="local:PathData"  HorizontalAlignment="Left" Height="27" Margin="153,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=FFPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="FFPathBox_PreviewDrop"/>
         <Button x:Name="selectFFButtion" Content="浏览" HorizontalAlignment="Left" Height="27" Margin="639,57,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.608,0.478" Click="SelectFFButton_Click"/>
         <Label Content="Args:" HorizontalAlignment="Right" Height="31" Margin="0,90,633.106,0" VerticalAlignment="Top" RenderTransformOrigin="1.053,0.264"/>
         <TextBox x:Name="ArgsBox" HorizontalAlignment="Left" Height="82" Margin="153,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="-g 120 -b:v 5000k -an -y NUL"/>
@@ -27,14 +23,14 @@
         <RadioButton x:Name="CUTConfButton" Content="Cut" HorizontalAlignment="Left" Height="19" Margin="472,187,0,0" VerticalAlignment="Top" Width="53" RenderTransformOrigin="0.455,-0.268" Checked="CUTConfButton_Checked"/>
         <Label Content="Configuation:" HorizontalAlignment="Right" Margin="0,182,633.106,0" VerticalAlignment="Top"/>
         <Label Content="InputFile:" HorizontalAlignment="Right" Height="25" Margin="0,224,633.106,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="input_Box" HorizontalAlignment="Left" Height="27" Margin="148,224,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=InputFile,Mode=TwoWay}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="InputBox_PreviewDrop" >
+        <TextBox x:Name="input_Box" HorizontalAlignment="Left" Height="27" Margin="148,224,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=InputFile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="InputBox_PreviewDrop" >
             <TextBox.DataContext>
                 <local:PathData/>
             </TextBox.DataContext>
         </TextBox>
         <Button x:Name="selectInputButton" Content="浏览" HorizontalAlignment="Left" Height="27" Margin="639,222,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.608,0.478" Click="SelectInputButton_Click"/>
         <Label Content="OutputFile:" HorizontalAlignment="Right" Height="25" Margin="0,256,633.106,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="output_Box" HorizontalAlignment="Left" Height="27" Margin="148,256,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=OutputFile, Mode=TwoWay}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="OutputBox_PreviewDrop">
+        <TextBox x:Name="output_Box" HorizontalAlignment="Left" Height="27" Margin="148,256,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="469" Text="{Binding Path=OutputFile, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="OutputBox_PreviewDrop">
             <TextBox.DataContext>
                 <local:PathData/>
             </TextBox.DataContext>

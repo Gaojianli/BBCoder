@@ -114,10 +114,16 @@ namespace Bdcoder
 
         private void PreviewButton_Click(object sender, RoutedEventArgs e)
         {
+            if ((pathData.inputFileNames == null || pathData.inputFileNames.Length == 0) 
+                && pathData.InputFile.Length != 0)
+            {
+                pathData.inputFileNames = new string[1];
+                pathData.inputFileNames[0] = pathData.InputFile;
+            }
             if (pathData.inputFileNames == null || pathData.inputFileNames.Length == 0)
             {
                 MessageBox.Show("Please select at least one input file!",
-                    "NO input file",
+                    "No input file",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 return;
@@ -185,7 +191,6 @@ namespace Bdcoder
             foreach (var filePath in (string[])e.Data.GetData(DataFormats.FileDrop))
             {
                 ((TextBox)sender).Text = filePath;
-                pathData.InputFile = filePath;
                 pathData.OutputFile = pathData.getOupFilePath(filePath);
             }
         }
@@ -194,7 +199,6 @@ namespace Bdcoder
             foreach (var filePath in (string[])e.Data.GetData(DataFormats.FileDrop))
             {
                 ((TextBox)sender).Text = filePath;
-                pathData.OutputFile = filePath;
             }
         }
         private void FFPathBox_PreviewDrop(object sender, DragEventArgs e)
@@ -202,7 +206,6 @@ namespace Bdcoder
             foreach (var filePath in (string[])e.Data.GetData(DataFormats.FileDrop))
             {
                 ((TextBox)sender).Text = filePath;
-                pathData.FFPath = filePath;
             }
         }
 
