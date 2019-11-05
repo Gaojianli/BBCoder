@@ -22,7 +22,7 @@ namespace Bdcoder
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string commonArgs = " -threads 6 -vcodec libx264 -acodec aac -keyint_min 30 -preset slow -profile:v high10 -f mp4 ";
+        private const string commonArgs = " -threads 16 -vcodec libx264 -acodec aac -keyint_min 30 -preset slow -profile:v high10 -f mp4 ";
         public PathData pathData;
         public MainWindow()
         {
@@ -132,7 +132,11 @@ namespace Bdcoder
             {
                 var outputFile = pathData.getOupFilePath(inputFile);
                 string command = $"\"{pathData.FFPath}\"";
-                if ((bool)CUTConfButton.IsChecked)
+                if ((bool)HWButton.IsChecked)
+                {
+                    command = $"-hwaccel cuvid -c:v h264_cuvid -i \"{inputFile}\"  -c:v nvenc_h264 -f mp4  -g 120 -b:v 5000k -an \"{outputFile}\"";
+                }
+                else if ((bool)CUTConfButton.IsChecked)
                 {
                     var startTime = startTimePicker.Value;
                     var endTimeCmd = !(bool)endCheckBox.IsChecked ? $"-to {endTimePicker.Value}" : null;
@@ -217,6 +221,12 @@ namespace Bdcoder
         private void PreviewCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             PreviewButton.Content = "Start";
+        }
+
+        private void HWButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ArgsBox.IsEnabled = false;
+            ArgsBox.Text = "-hwaccel cuvid -c:v h264_cuvid -c:v nvenc_h264 -f mp4  -g 120 -b:v 5000k -an";
         }
     }
 }
