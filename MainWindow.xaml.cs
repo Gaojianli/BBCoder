@@ -130,11 +130,11 @@ namespace Bdcoder
             }
             foreach (var inputFile in pathData.inputFileNames)
             {
-                var outputFile = pathData.getOupFilePath(inputFile);
-                string command = $"\"{pathData.FFPath}\"";
+                var outputFile = pathData.OutputFile;
+                string command = $"\"{pathData.FFPath}\" ";
                 if ((bool)HWButton.IsChecked)
                 {
-                    command = $"-hwaccel cuvid -c:v h264_cuvid -i \"{inputFile}\"  -c:v nvenc_h264 -f mp4  -g 120 -b:v 5000k -an \"{outputFile}\"";
+                    command += String.Format(ArgsBox.Text, $"\"{inputFile}\"") + $" \"{outputFile}\"";
                 }
                 else if ((bool)CUTConfButton.IsChecked)
                 {
@@ -225,8 +225,13 @@ namespace Bdcoder
 
         private void HWButton_Checked(object sender, RoutedEventArgs e)
         {
-            ArgsBox.IsEnabled = false;
-            ArgsBox.Text = "-hwaccel cuvid -c:v h264_cuvid -c:v nvenc_h264 -f mp4  -g 120 -b:v 5000k -an";
+            ArgsBox.Text = "-i {0} -c:v hevc_nvenc -c:a copy -keyint_min 30 -preset slow -f mp4  -g 120 -b:v 5000k -y ";
+        }
+
+        private void CUTConfButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ArgsBox.IsEnabled = true;
+            CutGroup.Visibility = Visibility.Hidden;
         }
     }
 }

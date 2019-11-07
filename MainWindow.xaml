@@ -20,7 +20,7 @@
         <RadioButton x:Name="DefaultConfButton" Content="Default" HorizontalAlignment="Left" Height="19" Margin="148,187,0,0" VerticalAlignment="Top" Width="83" IsChecked="True" RenderTransformOrigin="0.425,-0.072" Checked="DefaultConfButton_Checked"/>
         <RadioButton x:Name="LongConfButton" Content="Long" HorizontalAlignment="Left" Height="19" Margin="260,187,0,0" VerticalAlignment="Top" Width="88" Checked="LongConfButton_Checked"/>
         <RadioButton x:Name="CRFConfButton" Content="CRF" HorizontalAlignment="Left" Height="19" Margin="368,187,0,0" VerticalAlignment="Top" Width="43" RenderTransformOrigin="-0.422,1.029" Checked="CRFConfButton_Checked"/>
-        <RadioButton x:Name="CUTConfButton" Content="Cut" HorizontalAlignment="Left" Height="19" Margin="472,187,0,0" VerticalAlignment="Top" Width="53" RenderTransformOrigin="0.455,-0.268" Checked="CUTConfButton_Checked"/>
+        <RadioButton x:Name="CUTConfButton" Content="Cut" HorizontalAlignment="Left" Height="19" Margin="472,187,0,0" VerticalAlignment="Top" Width="53" RenderTransformOrigin="0.455,-0.268" Checked="CUTConfButton_Checked" Unchecked="CUTConfButton_Unchecked"/>
         <RadioButton x:Name="HWButton" Content="H/W" HorizontalAlignment="Left" Margin="576,188,0,0" VerticalAlignment="Top" Checked="HWButton_Checked"/>
         <Label Content="Configuation:" HorizontalAlignment="Right" Margin="0,182,633.106,0" VerticalAlignment="Top"/>
         <Label Content="InputFile:" HorizontalAlignment="Right" Height="25" Margin="0,224,633.106,0" VerticalAlignment="Top"/>
