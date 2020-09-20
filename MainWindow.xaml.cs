@@ -107,7 +107,7 @@ namespace Bdcoder
             {
                 if (filePicker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    pathData.InputFile = filePicker.FileName;
+                    pathData.OutputFile = filePicker.FileName;
                 }
             }
         }
